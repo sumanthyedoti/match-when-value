@@ -4,6 +4,7 @@
   "description": "P",
   "main": "src/index.js",
   "scripts": {
+    "test:dev": "jest --watch",
     "test": "jest"
   },
   "keywords": [
