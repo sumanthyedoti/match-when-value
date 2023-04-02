@@ -1,0 +1,28 @@
+{
+  "name": "js_pattern_matching",
+  "version": "0.1.0",
+  "description": "P",
+  "main": "src/index.js",
+  "scripts": {
+    "test": "jest"
+  },
+  "keywords": [
+    "Pattern Matching"
+  ],
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/sumanthyedoti/js-pattern-matching.git"
+  },
+  "author": "Sumanth Yedoti",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/sumanthyedoti/js-pattern-matching/issues"
+  },
+  "homepage": "https://github.com/sumanthyedoti/js-pattern-matching#readme",
+  "devDependencies": {
+    "@babel/core": "^7.21.4",
+    "@babel/preset-env": "^7.21.4",
+    "babel-jest": "^29.5.0",
+    "jest": "^29.5.0"
+  }
+}
