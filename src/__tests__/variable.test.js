@@ -42,3 +42,13 @@ describe('variable Match with null/undefined', () => {
     expect(matchIf(undefined).is(null).then(100)).toEqual(false)
   })
 });
+
+describe('variable Match with null/undefined', () => {
+  function trueIf10(x) {
+    return matchIf(x).is(10).then(true)
+  }
+  test('matchIf with function', () => {
+    expect(trueIf10(10)).toEqual(true)
+    expect(trueIf10(100)).toEqual(false)
+  })
+});
