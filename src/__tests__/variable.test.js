@@ -59,3 +59,23 @@ describe('use comparision operators', () => {
     expect(match(10 < 20).then(100)).toEqual(100)
   })
 });
+
+describe('with arrays', () => {
+  const x = 10;
+  const arr = [10, 20, null, undefined, "Hello", x, 20, 30]
+  test('exact array matches', () => {
+    expect(match(arr).by([10, 20]).then(100)).toEqual(100)
+    const y = 20;
+    expect(match(arr).by([10, y, null, undefined, "Hello", 10]).then(100)).toEqual(100)
+  })
+  test('matches if elements in 2nd array matches but has less elements', () => {
+    expect(match(arr).by([10]).then(100)).toEqual(100)
+  })
+  test('wrong elements fails to match', () => {
+    expect(match(arr).by([11, 20]).then(100)).toEqual(false)
+    expect(match(arr).by([11]).then(100)).toEqual(false)
+  })
+  test('fails if 2nd array has more elements', () => {
+    expect(match([10, 20]).by([10, 20, 30]).then(100)).toEqual(false)
+  })
+});
