@@ -33,7 +33,7 @@ describe('variable Match with boolean', () => {
 });
 
 describe('variable Match with null/undefined', () => {
-  test('should return then Value when variables matches', () => {
+  test('should return then \'by\' value variables matches', () => {
     expect(match(null).by(null).then(100)).toEqual(100)
     expect(match(undefined).by(undefined).then(100)).toEqual(100)
   })
@@ -43,12 +43,19 @@ describe('variable Match with null/undefined', () => {
   })
 });
 
-describe('variable Match with null/undefined', () => {
+describe('Use functions for expression', () => {
   function trueIf10(x) {
     return match(x).by(10).then(true)
   }
   test('match with function', () => {
     expect(trueIf10(10)).toEqual(true)
     expect(trueIf10(100)).toEqual(false)
+  })
+});
+
+describe('use comparision operators', () => {
+  test('match with function', () => {
+    expect(match(10 > 20).then(100)).toEqual(false)
+    expect(match(10 < 20).then(100)).toEqual(100)
   })
 });

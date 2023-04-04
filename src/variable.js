@@ -9,6 +9,7 @@ function match(x) {
   }
   return {
     by,
+    then: (valueToReturn) => x === true ? valueToReturn : false
   }
 }
 
