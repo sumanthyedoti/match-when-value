@@ -92,6 +92,9 @@ describe('with arrays', () => {
   test('two empty array match', () => {
     expect(match([]).by([]).then(100)).toEqual(100)
   })
+  test('fails if 2nd array is empty', () => {
+    expect(match([10, 20]).by([]).then(100)).toEqual(false)
+  })
 });
 
 describe('with object', () => {
@@ -106,5 +109,8 @@ describe('with object', () => {
   })
   test('two empty objects match', () => {
     expect(match({}).by({}).then(100)).toEqual(100)
+  })
+  test('fails if 2nd object is empty', () => {
+    expect(match({x: 10}).by({}).then(100)).toEqual(false)
   })
 });
