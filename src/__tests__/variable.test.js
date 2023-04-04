@@ -87,5 +87,24 @@ describe('with arrays', () => {
   })
   test('fails if 2nd array has more elements', () => {
     expect(match([10, 20]).by([10, 20, 30]).then(100)).toEqual(false)
+    expect(match([]).by([10, 20, 30]).then(100)).toEqual(false)
+  })
+  test('two empty array match', () => {
+    expect(match([]).by([]).then(100)).toEqual(100)
+  })
+});
+
+describe('with object', () => {
+  const obj = {x: 10, y: 10.23, z: "hello", u: null, v: undefined, w: 20}
+  test('passes if values of 2nd object matches with 1st object', () => {
+    expect(match(obj).by({x: 10}).then(100)).toEqual(100)
+    expect(match(obj).by({u: null, v: undefined}).then(100)).toEqual(100)
+  })
+  test('wrong elements fails to match', () => {
+    expect(match(obj).by({x: 10, y: 10.23, w: 30 }).then(100)).toEqual(false)
+    expect(match(obj).by([11]).then(100)).toEqual(false)
+  })
+  test('two empty objects match', () => {
+    expect(match({}).by({}).then(100)).toEqual(100)
   })
 });
