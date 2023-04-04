@@ -42,9 +42,9 @@ describe('Use functions for expression', () => {
   })
 });
 
-describe('use comparision operators', () => {
+describe('boolean match', () => {
   test('match with function', () => {
-    expect(match(10 > 20).then(100)).toEqual(false)
+    expect(match(10 !== 10).then(100)).toEqual(false)
     expect(match(10 < 20).then(100)).toEqual(100)
   })
 });
@@ -95,6 +95,9 @@ describe('with object', () => {
 });
 
 describe('\'then\' can take any primitive, composite values and functions', () => {
+  function log2(val) {
+    return Math.log(val) / Math.log(2)
+  }
   test('primitive values', () => {
     expect(match(10).by(10).then(null)).toEqual(null)
     expect(match(10).by(10).then(undefined)).toEqual(undefined)
@@ -109,13 +112,13 @@ describe('\'then\' can take any primitive, composite values and functions', () =
   })
   test('functions', () => {
     expect(match(10).by(10).then((x) => x === 10)).toEqual(true)
-    function log2(val) {
-      return Math.log(val) / Math.log(2)
-    }
     expect(match(8).by(8).then(log2)).toEqual(3)
     const arraySum = (arr) => {
       return arr.reduce((acc, x) => acc + x, 0)
     }
     expect(match([10, 20, 30, 40]).by([10, 20, 30]).then(arraySum)).toEqual(60)
+  })
+  describe('function with boolean match', () => {
+    expect(match(log2(8) === 3).then((isTrue) => isTrue)).toEqual(true)
   })
 })
