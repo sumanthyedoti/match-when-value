@@ -1,5 +1,5 @@
-function matchIf(x) {
-  const is = (valToMatch) => {
+function match(x) {
+  const by = (valToMatch) => {
     const then = (valToReturn) => {
       return x === valToMatch ? valToReturn : false
     }
@@ -8,8 +8,8 @@ function matchIf(x) {
     }
   }
   return {
-    is,
+    by,
   }
 }
 
-export default matchIf
+export default match
