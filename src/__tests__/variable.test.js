@@ -43,6 +43,16 @@ describe('variable Match with null/undefined', () => {
   })
 });
 
+describe('Mismatching types', () => {
+  test('should fail with mismatching types', () => {
+    expect(match(null).by(2).then(100)).toEqual(false)
+    expect(match([10]).by(2).then(100)).toEqual(false)
+    expect(match("100").by(2).then(100)).toEqual(false)
+    expect(match(10.23).by().then("10.23")).toEqual(false)
+    expect(match("hi").by(2).then(100)).toEqual(false)
+  })
+});
+
 describe('Use functions for expression', () => {
   function trueIf10(x) {
     return match(x).by(10).then(true)
