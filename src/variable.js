@@ -33,6 +33,10 @@ function isValuesMatch(val1, val2) {
 function match(x) {
   const by = (valToMatch) => {
     const then = (valToReturn) => {
+      if(typeof valToReturn === 'function') {
+        const callback = valToReturn
+        return isValuesMatch(x, valToMatch) ? callback(valToMatch) : false
+      }
       return isValuesMatch(x, valToMatch) ? valToReturn : false
     }
     return {

@@ -93,3 +93,29 @@ describe('with object', () => {
     expect(match({x: 10}).by({}).then(100)).toEqual(false)
   })
 });
+
+describe('\'then\' can take any primitive, composite values and functions', () => {
+  test('primitive values', () => {
+    expect(match(10).by(10).then(null)).toEqual(null)
+    expect(match(10).by(10).then(undefined)).toEqual(undefined)
+    expect(match(10).by(10).then(10.23)).toEqual(10.23)
+    expect(match(10).by(10).then("hello")).toEqual("hello")
+  })
+  test('composite values', () => {
+    const arr = [10, 20]
+    expect(match(10).by(10).then(arr)).toBe(arr)
+    const obj = {x: 10, y: 20}
+    expect(match(10).by(10).then(obj)).toBe(obj)
+  })
+  test('functions', () => {
+    expect(match(10).by(10).then((x) => x === 10)).toEqual(true)
+    function log2(val) {
+      return Math.log(val) / Math.log(2)
+    }
+    expect(match(8).by(8).then(log2)).toEqual(3)
+    const arraySum = (arr) => {
+      return arr.reduce((acc, x) => acc + x, 0)
+    }
+    expect(match([10, 20, 30, 40]).by([10, 20, 30]).then(arraySum)).toEqual(60)
+  })
+})
