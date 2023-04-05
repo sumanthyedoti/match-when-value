@@ -1,4 +1,4 @@
-import match from "../variable"
+import match from "../match"
 
 describe('variable Match with primitive values', () => {
   test('should return then Value when variables matches', () => {
@@ -70,6 +70,13 @@ describe('with arrays', () => {
   })
   test('two empty array match', () => {
     expect(match([]).by([]).then(100)).toEqual(100)
+  })
+  test('fails if 2nd array is empty', () => {
+    expect(match([10, 20]).by([]).then(100)).toEqual(false)
+  })
+  test('skip element if it is \'_\'', () => {
+    expect(match([10, 20, 30]).by([10, '_', 30]).then(100)).toEqual(100)
+    expect(match([10, 20, 30, 40, 50, 60]).by([10, '_', 30, '_']).then(100)).toEqual(100)
   })
   test('fails if 2nd array is empty', () => {
     expect(match([10, 20]).by([]).then(100)).toEqual(false)

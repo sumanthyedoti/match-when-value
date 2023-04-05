@@ -1,4 +1,4 @@
-import match from '../index'
+import match from '../match'
 
 describe('variable Match from lib', () => {
   test('should return then Value when variables matches', () => {
