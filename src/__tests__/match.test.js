@@ -59,7 +59,6 @@ describe("with arrays", () => {
   })
   test("exact array matches", () => {
     expect(match([10, 20]).by([10, 20]).then(100)).toEqual(100)
-    expect(match(arr).by([10, 20, "_"]).then(100)).toEqual(100)
     const y = 20
     expect(
       match(arr).by([10, y, null, undefined, "Hello", 10, 20, 30]).then(100),
@@ -80,6 +79,7 @@ describe("with arrays", () => {
     expect(match([10, 20]).by([]).then(100)).toEqual(false)
   })
   test("skip element if it is '_'", () => {
+    expect(match(arr).by([10, 20, "_"]).then(100)).toEqual(100)
     expect(match(arr).by([10, "_"]).then(100)).toEqual(100)
     expect(match([10, 20, 30]).by([10, "_", 30]).then(100)).toEqual(100)
     expect(match([10, "_", 30]).by([10, "_", 30]).then(100)).toEqual(100)
@@ -136,7 +136,9 @@ describe("'then' can take any primitive, composite values and functions", () => 
     const arraySum = (arr) => {
       return arr.reduce((acc, x) => acc + x, 0)
     }
-    expect(match([10, 20, 30, 40]).by([10, 20, 30]).then(arraySum)).toEqual(60)
+    expect(match([10, 20, 30, 40]).by([10, 20, 30, 40]).then(arraySum)).toEqual(
+      100,
+    )
   })
   describe("function with boolean match", () => {
     expect(match(log2(8) === 3).then((isTrue) => isTrue)).toEqual(true)
