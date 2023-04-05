@@ -54,15 +54,16 @@ describe("boolean match", () => {
 describe("with arrays", () => {
   const x = 10
   const arr = [10, 20, null, undefined, "Hello", x, 20, 30]
+  test("fails if elements in 2nd array matches but has less elements", () => {
+    expect(match(arr).by([10]).then(100)).toEqual(false)
+  })
   test("exact array matches", () => {
-    expect(match(arr).by([10, 20]).then(100)).toEqual(100)
+    expect(match([10, 20]).by([10, 20]).then(100)).toEqual(100)
+    expect(match(arr).by([10, 20, "_"]).then(100)).toEqual(100)
     const y = 20
     expect(
-      match(arr).by([10, y, null, undefined, "Hello", 10]).then(100),
+      match(arr).by([10, y, null, undefined, "Hello", 10, 20, 30]).then(100),
     ).toEqual(100)
-  })
-  test("matches if elements in 2nd array matches but has less elements", () => {
-    expect(match(arr).by([10]).then(100)).toEqual(100)
   })
   test("wrong elements fails to match", () => {
     expect(match(arr).by([11, 20]).then(100)).toEqual(false)
@@ -79,7 +80,9 @@ describe("with arrays", () => {
     expect(match([10, 20]).by([]).then(100)).toEqual(false)
   })
   test("skip element if it is '_'", () => {
+    expect(match(arr).by([10, "_"]).then(100)).toEqual(100)
     expect(match([10, 20, 30]).by([10, "_", 30]).then(100)).toEqual(100)
+    expect(match([10, "_", 30]).by([10, "_", 30]).then(100)).toEqual(100)
     expect(
       match([10, 20, 30, 40, 50, 60]).by([10, "_", 30, "_"]).then(100),
     ).toEqual(100)
@@ -139,3 +142,13 @@ describe("'then' can take any primitive, composite values and functions", () => 
     expect(match(log2(8) === 3).then((isTrue) => isTrue)).toEqual(true)
   })
 })
+
+// describe("Composite values", () => {
+//   test("array", () => {
+//     expect(
+//       match([10, 20, { x: 3, y: 200, z: "hello" }])
+//         .by([10, 20, { x: 3 }])
+//         .then(true),
+//     ).toEqual(true)
+//   })
+// })
