@@ -94,6 +94,13 @@ describe("with arrays", () => {
   test("passes if 2nd array length than 1st array but there is skip pattern at the end", () => {
     expect(match([10, 20]).by([10, "_"]).then(100)).toEqual(100)
   })
+  test("return original array if matches", () => {
+    expect(
+      match([10, 20, 30])
+        .by([10, "_"])
+        .then((arr) => arr[2]),
+    ).toEqual(30)
+  })
 })
 
 describe("with object", () => {
