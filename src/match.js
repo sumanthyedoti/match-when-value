@@ -1,17 +1,22 @@
 import { FAIL_VALUE } from "./config"
 
 function isArraysMatch(arr1, arr2) {
-  const varibales = []
+  const variables = []
   if (arr1.length < arr2.length) return [false, FAIL_VALUE]
-  if (arr2.length < arr1.length && arr2.at(-1) !== "_")
+  if (arr2.length < arr1.length && arr2.at(-1) !== "_") {
     return [false, FAIL_VALUE]
+  }
   if (arr1.length > 0 && arr2.length === 0) return [false, FAIL_VALUE]
   for (let i = 0; i < arr2.length; i++) {
     if (arr2[i] === "_") continue
+    if (arr2[i] === "~") {
+      variables.push(arr1[i])
+      continue
+    }
     if (arr1[i] !== arr2[i]) return [false, FAIL_VALUE]
     // if (!isValuesMatch(arr1[i], arr2[i])) return false
   }
-  return [true, arr1]
+  return [true, variables.length ? variables : arr1]
 }
 
 function isObjectEmpty(obj) {
