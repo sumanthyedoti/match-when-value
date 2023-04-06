@@ -1,6 +1,7 @@
 import { FAIL_VALUE } from "./config"
 
 function isArraysMatch(arr1, arr2) {
+  const varibales = []
   if (arr1.length < arr2.length) return [false, FAIL_VALUE]
   if (arr2.length < arr1.length && arr2.at(-1) !== "_")
     return [false, FAIL_VALUE]
@@ -10,7 +11,7 @@ function isArraysMatch(arr1, arr2) {
     if (arr1[i] !== arr2[i]) return [false, FAIL_VALUE]
     // if (!isValuesMatch(arr1[i], arr2[i])) return false
   }
-  return [true, arr2]
+  return [true, arr1]
 }
 
 function isObjectEmpty(obj) {

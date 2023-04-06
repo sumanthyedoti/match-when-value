@@ -88,8 +88,11 @@ describe("with arrays", () => {
       match([10, 20, 30, 40, 50, 60]).by([10, "_", 30, "_"]).then(100),
     ).toEqual(100)
   })
-  test("fails if 2nd array is empty", () => {
-    expect(match([10, 20]).by([]).then(100)).toEqual(FAIL_VALUE)
+  test("fails if 2nd array length than 1st array but no skip pattern at the end", () => {
+    expect(match([10, 20]).by([10]).then(100)).toEqual(FAIL_VALUE)
+  })
+  test("passes if 2nd array length than 1st array but there is skip pattern at the end", () => {
+    expect(match([10, 20]).by([10, "_"]).then(100)).toEqual(100)
   })
 })
 
@@ -139,9 +142,9 @@ describe("'then' can take any primitive, composite values and functions", () => 
     const arraySum = (arr) => {
       return arr.reduce((acc, x) => acc + x, 0)
     }
-    expect(match([10, 20, 30, 40]).by([10, 20, 30, 40]).then(arraySum)).toEqual(
-      100,
-    )
+    expect(
+      match([10, 20, 30, 40]).by([10, "_", 30, "_"]).then(arraySum),
+    ).toEqual(100)
   })
   describe("function with boolean match", () => {
     expect(match(log2(8) === 3).then((isTrue) => isTrue)).toEqual(true)
