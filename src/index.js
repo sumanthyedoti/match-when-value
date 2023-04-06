@@ -1,9 +1,10 @@
-import variableMatch from './variable'
+import { default as matchBy } from "./match"
 
-function matchIf(x) {
-  if(Array.isArray(x)) return
-  if(typeof x === "object") return
-  return variableMatch(x)
+function match(x) {
+  if (Array.isArray(x)) return
+  if (typeof x === "object") return
+  return matchBy(x)
 }
 
-export default matchIf
+export default match
+export const FAIL_VALUE = [null]

@@ -1,2 +1,3 @@
-- implement '\_' for array and fix test
+- implement what to return when array has '\_'s
 - implement composite value matching
+- implement similar pattern for not-matching case [null, ret]
