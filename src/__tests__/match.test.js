@@ -101,7 +101,7 @@ describe("with arrays", () => {
         .then((arr) => arr[2]),
     ).toEqual(30)
   })
-  test.only("return array of matching elements (picked elements) if variable pattern exists in match-by array", () => {
+  test("return array of matching elements (picked elements) if variable pattern exists in match-by array", () => {
     expect(
       match([10, 20, 30])
         .by([10, "~", "_"])
@@ -115,7 +115,7 @@ describe("with arrays", () => {
     expect(
       match([10, { x: 10, y: 20 }, 30])
         .by([10, "~", "~"])
-        .then(([x, y] = params) => [x, y]),
+        .then((params) => params),
     ).toEqual([{ x: 10, y: 20 }, 30])
     expect(
       match([10, { x: 10, y: 20 }, 30])
@@ -128,10 +128,10 @@ describe("with arrays", () => {
         .then(([x] = params) => x),
     ).toEqual({ x: 10, y: 20 })
     expect(
-      match([10, 20, 30, 40, 50, 60])
+      match([10, [20, 30], 30, { x: 2, y: 4 }, 50, 60])
         .by([10, "~", "_", "~", "_"])
         .then((params) => params),
-    ).toEqual([20, 40])
+    ).toEqual([[20, 30], { x: 2, y: 4 }])
   })
 })
 
