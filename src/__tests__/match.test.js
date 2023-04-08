@@ -1,6 +1,6 @@
 import match from "../match"
 import { FAIL_VALUE, PATTERNS } from "../config"
-const { SKIP_ELEMENT, PICK_ELEMENT, SKIP_REMAINING } = PATTERNS
+const { SKIP_ELEMENT, PICK_ELEMENT, SKIP_REMAINING, PICK_REMAINING } = PATTERNS
 
 describe("variable Match with primitive values", () => {
   test("should return then Value when variables matches", () => {
@@ -80,27 +80,29 @@ describe("with arrays", () => {
   test("fails if 2nd array is empty", () => {
     expect(match([10, 20]).by([]).then(100)).toEqual(FAIL_VALUE)
   })
-  test("skip element if it is " + PATTERNS.SKIP_REMAINING, () => {
-    expect(match(arr).by([10, 20, PATTERNS.SKIP_REMAINING]).then(100)).toEqual(
-      100,
-    )
-    expect(match(arr).by([10, PATTERNS.SKIP_REMAINING]).then(100)).toEqual(100)
+  test("skip element if it is " + PATTERNS.SKIP_ELEMENT, () => {
     expect(match([10, 20, 30]).by([10, SKIP_ELEMENT, 30]).then(100)).toEqual(
       100,
     )
     expect(match([10, "_", 30]).by([10, SKIP_ELEMENT, 30]).then(100)).toEqual(
       100,
     )
+  })
+  test("skip remaining element if it is " + PATTERNS.SKIP_REMAINING, () => {
+    expect(match(arr).by([10, 20, PATTERNS.SKIP_REMAINING]).then(100)).toEqual(
+      100,
+    )
+    expect(match(arr).by([10, PATTERNS.SKIP_REMAINING]).then(100)).toEqual(100)
     expect(
       match([10, 20, 30, 40, 50, 60])
         .by([10, SKIP_ELEMENT, 30, PATTERNS.SKIP_REMAINING])
         .then(100),
     ).toEqual(100)
   })
-  test("fails if 2nd array length than 1st array but no skip pattern at the end", () => {
+  test("fails if 2nd array is smaller than 1st array but no skip pattern at the end", () => {
     expect(match([10, 20]).by([10]).then(100)).toEqual(FAIL_VALUE)
   })
-  test("passes if 2nd array length than 1st array but there is skip pattern at the end", () => {
+  test("passes if 2nd array is smaller than 1st array but there is skip pattern at the end", () => {
     expect(match([10, 20]).by([10, SKIP_ELEMENT]).then(100)).toEqual(100)
   })
   test("return original array if matches", () => {
@@ -110,7 +112,7 @@ describe("with arrays", () => {
         .then((arr) => arr[2]),
     ).toEqual(30)
   })
-  test("return array of matching elements (picked elements) if variable pattern exists in match-by array", () => {
+  test("return array of matching elements (picked elements) if pick pattern exists in match-by array", () => {
     expect(
       match([10, 20, 30])
         .by([10, PATTERNS.PICK_ELEMENT, SKIP_ELEMENT])
@@ -141,6 +143,13 @@ describe("with arrays", () => {
         .by([10, PICK_ELEMENT, SKIP_ELEMENT, PICK_ELEMENT, SKIP_REMAINING])
         .then((params) => params),
     ).toEqual([[20, 30], { x: 2, y: 4 }])
+  })
+  test("picks all remianing elements from original array", () => {
+    expect(
+      match(arr)
+        .by([10, "~", "~", "_", PICK_REMAINING])
+        .then((arr) => arr),
+    ).toEqual([20, null, "Hello", x, 20, 30])
   })
 })
 

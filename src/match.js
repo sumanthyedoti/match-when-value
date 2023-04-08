@@ -2,9 +2,13 @@ import { isObjectEmpty } from "./utils"
 import { FAIL_VALUE, PATTERNS } from "./config"
 
 function isArraysMatch(arr1, arr2) {
-  const variables = []
+  const returnArray = []
   if (arr1.length < arr2.length) return [false, FAIL_VALUE]
-  if (arr2.length < arr1.length && arr2.at(-1) !== PATTERNS.SKIP_REMAINING) {
+  if (
+    arr2.length < arr1.length &&
+    arr2.at(-1) !== PATTERNS.SKIP_REMAINING &&
+    arr2.at(-1) !== PATTERNS.PICK_REMAINING
+  ) {
     return [false, FAIL_VALUE]
   }
   if (arr1.length > 0 && arr2.length === 0) return [false, FAIL_VALUE]
@@ -12,13 +16,20 @@ function isArraysMatch(arr1, arr2) {
     if (arr2[i] === PATTERNS.SKIP_ELEMENT) continue
     if (arr2[i] === PATTERNS.SKIP_REMAINING) break
     if (arr2[i] === PATTERNS.PICK_ELEMENT) {
-      variables.push(arr1[i])
+      returnArray.push(arr1[i])
       continue
+    }
+    if (arr2[i] === PATTERNS.PICK_REMAINING) {
+      console.log(PATTERNS.PICK_REMAINING)
+      for (let j = i; j < arr1.length; j++) {
+        returnArray.push(arr1[j])
+      }
+      break
     }
     if (arr1[i] !== arr2[i]) return [false, FAIL_VALUE]
     // if (!isValuesMatch(arr1[i], arr2[i])) return false
   }
-  return [true, variables.length ? variables : arr1]
+  return [true, returnArray.length ? returnArray : arr1]
 }
 
 function isObjectsMatch(obj1, obj2) {
