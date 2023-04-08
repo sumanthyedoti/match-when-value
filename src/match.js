@@ -33,10 +33,9 @@ function isArraysMatch(arr1, arr2) {
 
 function isObjectsMatch(obj1, obj2) {
   if (!isObjectEmpty(obj1) && isObjectEmpty(obj2)) return [false, FAIL_VALUE]
-  const returnObject = {}
   const pickedObject = {}
   for (const key in obj2) {
-    const [isMatch, returnValue] = isValuesMatch(obj1[key], obj2[key])
+    const [isMatch, _] = isValuesMatch(obj1[key], obj2[key])
     if (!isMatch && obj2[key] !== PATTERNS.PICK_ELEMENT) {
       return [false, FAIL_VALUE]
     }
@@ -44,9 +43,8 @@ function isObjectsMatch(obj1, obj2) {
       pickedObject[key] = obj1[key]
       continue
     }
-    returnObject[key] = returnValue
   }
-  return [true, isObjectEmpty(pickedObject) ? returnObject : pickedObject]
+  return [true, isObjectEmpty(pickedObject) ? obj1 : pickedObject]
 }
 
 function isValuesMatch(val1, val2) {

@@ -147,7 +147,18 @@ describe("with arrays", () => {
   test("picks all remianing elements from original array", () => {
     expect(
       match(arr)
-        .by([10, "~", "~", "_", PICK_REMAINING])
+        .by([10, PICK_ELEMENT, PICK_ELEMENT, SKIP_ELEMENT, PICK_REMAINING])
+        .then((arr) => arr),
+    ).toEqual([20, null, "Hello", x, 20, 30])
+    expect(
+      match(arr)
+        .by([
+          SKIP_ELEMENT,
+          PICK_ELEMENT,
+          PICK_ELEMENT,
+          SKIP_ELEMENT,
+          PICK_REMAINING,
+        ])
         .then((arr) => arr),
     ).toEqual([20, null, "Hello", x, 20, 30])
   })
@@ -160,7 +171,7 @@ describe("with object", () => {
       match(obj)
         .by({ x: 10 })
         .then((val) => val),
-    ).toEqual({ x: 10 })
+    ).toEqual(obj)
     expect(match(obj).by({ u: null, v: undefined }).then(100)).toEqual(100)
   })
   test("wrong elements fails to match", () => {
@@ -276,8 +287,13 @@ describe("Composite values", () => {
     }
     expect(
       match(obj)
-        .by({ y: { x: 20, z: [10, "_;"] } })
+        .by({ y: { x: 20, z: [10, SKIP_REMAINING] } })
         .then((val) => val),
-    ).toEqual({ y: { x: 20, z: [10, 20, { d: 3, k: "hello" }] } })
+    ).toEqual(obj)
+    expect(
+      match(obj)
+        .by({ y: { x: 20, z: [10, SKIP_REMAINING] }, z: "~" })
+        .then((val) => val),
+    ).toEqual({ z: [3, 4, [1, 2], { x: 20, y: 30 }] })
   })
 })
