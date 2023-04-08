@@ -1,14 +1,15 @@
-import { FAIL_VALUE } from "./config"
+import { FAIL_VALUE, PATTERNS } from "./config"
 
 function isArraysMatch(arr1, arr2) {
   const variables = []
   if (arr1.length < arr2.length) return [false, FAIL_VALUE]
-  if (arr2.length < arr1.length && arr2.at(-1) !== "_") {
+  if (arr2.length < arr1.length && arr2.at(-1) !== PATTERNS.SKIP_REMAINING) {
     return [false, FAIL_VALUE]
   }
   if (arr1.length > 0 && arr2.length === 0) return [false, FAIL_VALUE]
   for (let i = 0; i < arr2.length; i++) {
     if (arr2[i] === "_") continue
+    if (arr2[i] === PATTERNS.SKIP_REMAINING) break
     if (arr2[i] === "~") {
       variables.push(arr1[i])
       continue

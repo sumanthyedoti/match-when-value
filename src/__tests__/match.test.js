@@ -1,5 +1,5 @@
 import match from "../match"
-import { FAIL_VALUE } from "../config"
+import { FAIL_VALUE, PATTERNS } from "../config"
 
 describe("variable Match with primitive values", () => {
   test("should return then Value when variables matches", () => {
@@ -79,13 +79,17 @@ describe("with arrays", () => {
   test("fails if 2nd array is empty", () => {
     expect(match([10, 20]).by([]).then(100)).toEqual(FAIL_VALUE)
   })
-  test("skip element if it is '_'", () => {
-    expect(match(arr).by([10, 20, "_"]).then(100)).toEqual(100)
-    expect(match(arr).by([10, "_"]).then(100)).toEqual(100)
+  test("skip element if it is " + PATTERNS.SKIP_REMAINING, () => {
+    expect(match(arr).by([10, 20, PATTERNS.SKIP_REMAINING]).then(100)).toEqual(
+      100,
+    )
+    expect(match(arr).by([10, PATTERNS.SKIP_REMAINING]).then(100)).toEqual(100)
     expect(match([10, 20, 30]).by([10, "_", 30]).then(100)).toEqual(100)
     expect(match([10, "_", 30]).by([10, "_", 30]).then(100)).toEqual(100)
     expect(
-      match([10, 20, 30, 40, 50, 60]).by([10, "_", 30, "_"]).then(100),
+      match([10, 20, 30, 40, 50, 60])
+        .by([10, "_", 30, PATTERNS.SKIP_REMAINING])
+        .then(100),
     ).toEqual(100)
   })
   test("fails if 2nd array length than 1st array but no skip pattern at the end", () => {
@@ -97,7 +101,7 @@ describe("with arrays", () => {
   test("return original array if matches", () => {
     expect(
       match([10, 20, 30])
-        .by([10, "_"])
+        .by([10, PATTERNS.SKIP_REMAINING])
         .then((arr) => arr[2]),
     ).toEqual(30)
   })
@@ -129,7 +133,7 @@ describe("with arrays", () => {
     ).toEqual({ x: 10, y: 20 })
     expect(
       match([10, [20, 30], 30, { x: 2, y: 4 }, 50, 60])
-        .by([10, "~", "_", "~", "_"])
+        .by([10, "~", "_", "~", PATTERNS.SKIP_REMAINING])
         .then((params) => params),
     ).toEqual([[20, 30], { x: 2, y: 4 }])
   })

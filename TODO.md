@@ -1,3 +1,2 @@
-- implement what to return when array has '\_'s
+- implement different pattern for skip-remaining
 - implement composite value matching
-- implement similar pattern for not-matching case [null, ret]
