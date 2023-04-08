@@ -1,3 +1,4 @@
+import { isObjectEmpty } from "./utils"
 import { FAIL_VALUE, PATTERNS } from "./config"
 
 function isArraysMatch(arr1, arr2) {
@@ -20,16 +21,18 @@ function isArraysMatch(arr1, arr2) {
   return [true, variables.length ? variables : arr1]
 }
 
-function isObjectEmpty(obj) {
-  return Object.keys(obj).length === 0
-}
-
 function isObjectsMatch(obj1, obj2) {
   if (!isObjectEmpty(obj1) && isObjectEmpty(obj2)) return [false, FAIL_VALUE]
+  const returnObject = {}
   for (const key in obj2) {
-    if (obj1[key] !== obj2[key]) return [false, FAIL_VALUE]
+    if (obj2[key] === PATTERNS.PICK_ELEMENT) {
+      returnObject[key] = obj1[key]
+      continue
+    }
+    if (obj1[key] !== obj2[key] && obj2[key] !== PATTERNS.PICK_ELEMENT)
+      return [false, FAIL_VALUE]
   }
-  return [true, obj2]
+  return [true, isObjectEmpty(returnObject) ? obj2 : returnObject]
 }
 
 function isValuesMatch(val1, val2) {

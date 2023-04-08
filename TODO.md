@@ -1,2 +1,2 @@
-- implement different pattern for skip-remaining
 - implement composite value matching
+- implement object match for picking fields

@@ -162,6 +162,18 @@ describe("with object", () => {
   test("fails if 2nd object is empty", () => {
     expect(match({ x: 10 }).by({}).then(100)).toEqual(FAIL_VALUE)
   })
+  test("returns picked object fields", () => {
+    expect(
+      match({ x: 10, y: 20, z: PICK_ELEMENT }).by({ x: 10 }).then(100),
+    ).toEqual(100)
+  })
+  test("returns picked object fields", () => {
+    expect(
+      match({ w: 5, x: 10, y: 20, z: "~" })
+        .by({ x: "~", z: PICK_ELEMENT })
+        .then((obj) => obj),
+    ).toEqual({ x: 10, z: "~" })
+  })
 })
 
 describe("'then' can take any primitive, composite values and functions", () => {
