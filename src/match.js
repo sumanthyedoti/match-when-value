@@ -20,14 +20,13 @@ function isArraysMatch(arr1, arr2) {
       continue
     }
     if (arr2[i] === PATTERNS.PICK_REMAINING) {
-      console.log(PATTERNS.PICK_REMAINING)
       for (let j = i; j < arr1.length; j++) {
         returnArray.push(arr1[j])
       }
       break
     }
-    if (arr1[i] !== arr2[i]) return [false, FAIL_VALUE]
-    // if (!isValuesMatch(arr1[i], arr2[i])) return false
+    const [isMatch, val] = isValuesMatch(arr1[i], arr2[i])
+    if (!isMatch) return [false, FAIL_VALUE]
   }
   return [true, returnArray.length ? returnArray : arr1]
 }
@@ -35,15 +34,19 @@ function isArraysMatch(arr1, arr2) {
 function isObjectsMatch(obj1, obj2) {
   if (!isObjectEmpty(obj1) && isObjectEmpty(obj2)) return [false, FAIL_VALUE]
   const returnObject = {}
+  const pickedObject = {}
   for (const key in obj2) {
+    const [isMatch, returnValue] = isValuesMatch(obj1[key], obj2[key])
+    if (!isMatch && obj2[key] !== PATTERNS.PICK_ELEMENT) {
+      return [false, FAIL_VALUE]
+    }
     if (obj2[key] === PATTERNS.PICK_ELEMENT) {
-      returnObject[key] = obj1[key]
+      pickedObject[key] = obj1[key]
       continue
     }
-    if (obj1[key] !== obj2[key] && obj2[key] !== PATTERNS.PICK_ELEMENT)
-      return [false, FAIL_VALUE]
+    returnObject[key] = returnValue
   }
-  return [true, isObjectEmpty(returnObject) ? obj2 : returnObject]
+  return [true, isObjectEmpty(pickedObject) ? returnObject : pickedObject]
 }
 
 function isValuesMatch(val1, val2) {

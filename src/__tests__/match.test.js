@@ -156,7 +156,11 @@ describe("with arrays", () => {
 describe("with object", () => {
   const obj = { x: 10, y: 10.23, z: "hello", u: null, v: undefined, w: 20 }
   test("passes if values of 2nd object matches with 1st object", () => {
-    expect(match(obj).by({ x: 10 }).then(100)).toEqual(100)
+    expect(
+      match(obj)
+        .by({ x: 10 })
+        .then((val) => val),
+    ).toEqual({ x: 10 })
     expect(match(obj).by({ u: null, v: undefined }).then(100)).toEqual(100)
   })
   test("wrong elements fails to match", () => {
@@ -222,12 +226,58 @@ describe("'then' can take any primitive, composite values and functions", () => 
   })
 })
 
-// describe("Composite values", () => {
-//   test("array", () => {
-//     expect(
-//       match([10, 20, { x: 3, y: 200, z: "hello" }])
-//         .by([10, 20, { x: 3 }])
-//         .then(true),
-//     ).toEqual(true)
-//   })
-// })
+describe("Composite values", () => {
+  test("array", () => {
+    const arr = [
+      10,
+      20,
+      { x: 3, y: 200, z: "hello", w: [1, { x: 20, y: 40, z: 60 }] },
+    ]
+    expect(
+      match(arr)
+        .by([10, 20, { x: 3, w: [1, { x: 20, y: 40 }] }])
+        .then((val) => val),
+    ).toEqual(arr)
+  })
+  test("array - fail", () => {
+    const arr = [
+      10,
+      20,
+      {
+        x: 3,
+        y: 200,
+        z: "hello",
+        w: [1, { x: 20, y: 40, z: { x: 20, y: 40 } }],
+      },
+    ]
+    expect(
+      match(arr)
+        .by([10, 20, { x: 3, w: [1, { x: 20, y: 40, z: { x: 20, y: 30 } }] }])
+        .then((val) => val),
+    ).toEqual(FAIL_VALUE)
+  })
+  test("object - fails when deep array fails", () => {
+    const obj = {
+      x: 10,
+      y: { x: 20, z: [10, 20, { d: 3, k: "hello" }] },
+      z: [3, 4, [1, 2], { x: 20, y: 30 }],
+    }
+    expect(
+      match(obj)
+        .by({ y: { x: 20, z: [10] } })
+        .then((val) => val),
+    ).toEqual(FAIL_VALUE)
+  })
+  test("object - passes", () => {
+    const obj = {
+      x: 10,
+      y: { x: 20, z: [10, 20, { d: 3, k: "hello" }] },
+      z: [3, 4, [1, 2], { x: 20, y: 30 }],
+    }
+    expect(
+      match(obj)
+        .by({ y: { x: 20, z: [10, "_;"] } })
+        .then((val) => val),
+    ).toEqual({ y: { x: 20, z: [10, 20, { d: 3, k: "hello" }] } })
+  })
+})

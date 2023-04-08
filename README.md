@@ -3,7 +3,7 @@
 - Fails if array/object to match with is empty
 - Passes with two empty arrays/object
 - if array matches (without picks in match-array), original array is returned
-- if object matches (without picks in match-object), match-object is returned
+- if object matches (without picks in match-object), original-object is returned
   - if picks exists, objects is returned only picked fields
 - `_` is used to match any value
   - if `_` is last elements to match-by array, it catches the remaining values
