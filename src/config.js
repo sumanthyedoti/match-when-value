@@ -1,4 +1,6 @@
 export const FAIL_VALUE = null
 export const PATTERNS = {
-  SKIP_REMAINING: ";_",
+  SKIP_ELEMENT: "_",
+  SKIP_REMAINING: "_;",
+  PICK_ELEMENT: "~;",
 }

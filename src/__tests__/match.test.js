@@ -1,5 +1,6 @@
 import match from "../match"
 import { FAIL_VALUE, PATTERNS } from "../config"
+const { SKIP_ELEMENT, PICK_ELEMENT, SKIP_REMAINING } = PATTERNS
 
 describe("variable Match with primitive values", () => {
   test("should return then Value when variables matches", () => {
@@ -84,11 +85,15 @@ describe("with arrays", () => {
       100,
     )
     expect(match(arr).by([10, PATTERNS.SKIP_REMAINING]).then(100)).toEqual(100)
-    expect(match([10, 20, 30]).by([10, "_", 30]).then(100)).toEqual(100)
-    expect(match([10, "_", 30]).by([10, "_", 30]).then(100)).toEqual(100)
+    expect(match([10, 20, 30]).by([10, SKIP_ELEMENT, 30]).then(100)).toEqual(
+      100,
+    )
+    expect(match([10, "_", 30]).by([10, SKIP_ELEMENT, 30]).then(100)).toEqual(
+      100,
+    )
     expect(
       match([10, 20, 30, 40, 50, 60])
-        .by([10, "_", 30, PATTERNS.SKIP_REMAINING])
+        .by([10, SKIP_ELEMENT, 30, PATTERNS.SKIP_REMAINING])
         .then(100),
     ).toEqual(100)
   })
@@ -96,44 +101,44 @@ describe("with arrays", () => {
     expect(match([10, 20]).by([10]).then(100)).toEqual(FAIL_VALUE)
   })
   test("passes if 2nd array length than 1st array but there is skip pattern at the end", () => {
-    expect(match([10, 20]).by([10, "_"]).then(100)).toEqual(100)
+    expect(match([10, 20]).by([10, SKIP_ELEMENT]).then(100)).toEqual(100)
   })
   test("return original array if matches", () => {
     expect(
       match([10, 20, 30])
-        .by([10, PATTERNS.SKIP_REMAINING])
+        .by([10, SKIP_REMAINING])
         .then((arr) => arr[2]),
     ).toEqual(30)
   })
   test("return array of matching elements (picked elements) if variable pattern exists in match-by array", () => {
     expect(
       match([10, 20, 30])
-        .by([10, "~", "_"])
+        .by([10, PATTERNS.PICK_ELEMENT, SKIP_ELEMENT])
         .then(([x] = params) => x),
     ).toEqual(20)
     expect(
       match([10, [10, 20], 30])
-        .by([10, "~", 30])
+        .by([10, PICK_ELEMENT, 30])
         .then(([x] = params) => x),
     ).toEqual([10, 20])
     expect(
       match([10, { x: 10, y: 20 }, 30])
-        .by([10, "~", "~"])
+        .by([10, PICK_ELEMENT, PICK_ELEMENT])
         .then((params) => params),
     ).toEqual([{ x: 10, y: 20 }, 30])
     expect(
       match([10, { x: 10, y: 20 }, 30])
-        .by([10, "~", 30])
+        .by([10, PICK_ELEMENT, 30])
         .then(([x] = params) => x),
     ).toEqual({ x: 10, y: 20 })
     expect(
       match([10, { x: 10, y: 20 }, 30])
-        .by(["_", "~", "_"])
+        .by([SKIP_ELEMENT, PICK_ELEMENT, SKIP_REMAINING])
         .then(([x] = params) => x),
     ).toEqual({ x: 10, y: 20 })
     expect(
       match([10, [20, 30], 30, { x: 2, y: 4 }, 50, 60])
-        .by([10, "~", "_", "~", PATTERNS.SKIP_REMAINING])
+        .by([10, PICK_ELEMENT, SKIP_ELEMENT, PICK_ELEMENT, SKIP_REMAINING])
         .then((params) => params),
     ).toEqual([[20, 30], { x: 2, y: 4 }])
   })
@@ -186,7 +191,9 @@ describe("'then' can take any primitive, composite values and functions", () => 
       return arr.reduce((acc, x) => acc + x, 0)
     }
     expect(
-      match([10, 20, 30, 40]).by([10, "_", 30, "_"]).then(arraySum),
+      match([10, 20, 30, 40])
+        .by([10, SKIP_ELEMENT, 30, SKIP_ELEMENT])
+        .then(arraySum),
     ).toEqual(100)
   })
   describe("function with boolean match", () => {

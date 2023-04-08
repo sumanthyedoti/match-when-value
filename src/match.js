@@ -8,9 +8,9 @@ function isArraysMatch(arr1, arr2) {
   }
   if (arr1.length > 0 && arr2.length === 0) return [false, FAIL_VALUE]
   for (let i = 0; i < arr2.length; i++) {
-    if (arr2[i] === "_") continue
+    if (arr2[i] === PATTERNS.SKIP_ELEMENT) continue
     if (arr2[i] === PATTERNS.SKIP_REMAINING) break
-    if (arr2[i] === "~") {
+    if (arr2[i] === PATTERNS.PICK_ELEMENT) {
       variables.push(arr1[i])
       continue
     }
