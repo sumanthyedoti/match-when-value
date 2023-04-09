@@ -2,7 +2,7 @@ import { isObjectEmpty, lastElement } from "./utils"
 import { FAIL_VALUE, PATTERNS } from "./config"
 
 function isArraysMatch(arr1, arr2) {
-  const returnArray = []
+  const pickedElements = []
   if (arr1.length < arr2.length) return [false, FAIL_VALUE]
   if (
     arr2.length < arr1.length &&
@@ -16,37 +16,45 @@ function isArraysMatch(arr1, arr2) {
     if (arr2[i] === PATTERNS.SKIP_ELEMENT) continue
     if (arr2[i] === PATTERNS.SKIP_REMAINING) break
     if (arr2[i] === PATTERNS.PICK_ELEMENT) {
-      returnArray.push(arr1[i])
+      pickedElements.push(arr1[i])
       continue
     }
     if (arr2[i] === PATTERNS.PICK_REMAINING) {
       for (let j = i; j < arr1.length; j++) {
-        returnArray.push(arr1[j])
+        pickedElements.push(arr1[j])
       }
       break
     }
-    const [isMatch, _] = isValuesMatch(arr1[i], arr2[i])
+    const [isMatch, returnValue, isPicked] = isValuesMatch(arr1[i], arr2[i])
+    if (isPicked) {
+      pickedElements.push(returnValue)
+    }
     if (!isMatch) return [false, FAIL_VALUE]
   }
-  return [true, returnArray.length ? returnArray : arr1]
+  const isPicked = !isObjectEmpty(pickedElements)
+  return isPicked ? [true, pickedElements, true] : [true, arr1, false]
 }
 
 function isObjectsMatch(obj1, obj2) {
   if (!isObjectEmpty(obj1) && isObjectEmpty(obj2)) return [false, FAIL_VALUE]
-  const pickedObject = {}
+  const pickedFields = {}
   const keys = Object.keys(obj2)
   for (let i = 0; i < keys.length; i++) {
     const key = keys[i]
-    const [isMatch, _] = isValuesMatch(obj1[key], obj2[key])
+    const [isMatch, returnValue, isPicked] = isValuesMatch(obj1[key], obj2[key])
+    if (isPicked) {
+      pickedFields[key] = returnValue
+    }
     if (!isMatch && obj2[key] !== PATTERNS.PICK_ELEMENT) {
       return [false, FAIL_VALUE]
     }
     if (obj2[key] === PATTERNS.PICK_ELEMENT) {
-      pickedObject[key] = obj1[key]
+      pickedFields[key] = obj1[key]
       continue
     }
   }
-  return [true, isObjectEmpty(pickedObject) ? obj1 : pickedObject]
+  const isPicked = !isObjectEmpty(pickedFields)
+  return isPicked ? [true, pickedFields, true] : [true, obj1, false]
 }
 
 function isValuesMatch(val1, val2) {
@@ -55,6 +63,7 @@ function isValuesMatch(val1, val2) {
     return isArraysMatch(val1, val2)
   }
   if (typeof val1 === "object" && val1 !== null) {
+    // console.log(isObjectsMatch(val1, val2))
     return isObjectsMatch(val1, val2)
   }
   return val1 === val2 ? [true, val2] : [false, FAIL_VALUE]

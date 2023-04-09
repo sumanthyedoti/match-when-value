@@ -162,6 +162,13 @@ describe("with arrays", () => {
         .then((arr) => arr),
     ).toEqual([20, null, "Hello", x, 20, 30])
   })
+  test("if picked deeply, return only elements", () => {
+    expect(
+      match([20, 30, { x: 40, y: 10, z: [2, [4, 5, 6], 5] }])
+        .by([20, 30, { x: 40, z: ["~", [4, "~", "~"], "_"] }])
+        .then((obj) => obj),
+    ).toEqual([{ z: [2, [5, 6]] }])
+  })
 })
 
 describe("with object", () => {
@@ -197,6 +204,13 @@ describe("with object", () => {
         .by({ x: "~", z: PICK_ELEMENT })
         .then((obj) => obj),
     ).toEqual({ x: 10, z: "~" })
+  })
+  test("if picked deeply, return those fields", () => {
+    expect(
+      match({ x: 20, y: { x: 10, y: 20, z: 30 } })
+        .by({ x: 20, y: { x: 10, y: "~" } })
+        .then((obj) => obj),
+    ).toEqual({ y: { y: 20 } })
   })
 })
 
