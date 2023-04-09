@@ -1,4 +1,4 @@
-import { isObjectEmpty } from "./utils"
+import { isObjectEmpty, lastElement } from "./utils"
 import { FAIL_VALUE, PATTERNS } from "./config"
 
 function isArraysMatch(arr1, arr2) {
@@ -6,8 +6,8 @@ function isArraysMatch(arr1, arr2) {
   if (arr1.length < arr2.length) return [false, FAIL_VALUE]
   if (
     arr2.length < arr1.length &&
-    arr2.at(-1) !== PATTERNS.SKIP_REMAINING &&
-    arr2.at(-1) !== PATTERNS.PICK_REMAINING
+    lastElement(arr2) !== PATTERNS.SKIP_REMAINING &&
+    lastElement(arr2) !== PATTERNS.PICK_REMAINING
   ) {
     return [false, FAIL_VALUE]
   }
