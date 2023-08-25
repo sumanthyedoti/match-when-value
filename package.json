@@ -5,7 +5,8 @@
   "main": "src/index.js",
   "scripts": {
     "test:dev": "jest --watch",
-    "test": "jest"
+    "test": "jest",
+    "build": "babel src -d dist"
   },
   "keywords": [
     "Pattern Matching"
@@ -21,6 +22,7 @@
   },
   "homepage": "https://github.com/sumanthyedoti/js-pattern-matching#readme",
   "devDependencies": {
+    "@babel/cli": "^7.22.5",
     "@babel/core": "^7.21.4",
     "@babel/preset-env": "^7.21.4",
     "babel-jest": "^29.5.0",
