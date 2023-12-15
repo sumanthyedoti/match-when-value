@@ -99,5 +99,4 @@ function match(x) {
   }
 }
 
-export default match
-
+module.exports = match

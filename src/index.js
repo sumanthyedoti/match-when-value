@@ -1,4 +1,3 @@
-import { default as match } from "./match"
+import match from "./match"
 
-export default match
-
+module.exports = match
