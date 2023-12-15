@@ -15,6 +15,7 @@ describe("variable Match with primitive values", () => {
     expect(match(null).by(null).then(100)).toEqual(100)
     expect(match(undefined).by(undefined).then(100)).toEqual(100)
   })
+
   test("should return false when variables does not matche", () => {
     expect(match(1).by(10).then(100)).toEqual(FAIL_VALUE)
     expect(match(10.23).by(10.32).then(100)).toEqual(FAIL_VALUE)
@@ -59,6 +60,7 @@ describe("with arrays", () => {
   test("fails if elements in 2nd array matches but has less elements", () => {
     expect(match(arr).by([10]).then(100)).toEqual(FAIL_VALUE)
   })
+
   test("exact array matches", () => {
     expect(match([10, 20]).by([10, 20]).then(100)).toEqual(100)
     const y = 20
@@ -66,20 +68,25 @@ describe("with arrays", () => {
       match(arr).by([10, y, null, undefined, "Hello", 10, 20, 30]).then(100),
     ).toEqual(100)
   })
+
   test("wrong elements fails to match", () => {
     expect(match(arr).by([11, 20]).then(100)).toEqual(FAIL_VALUE)
     expect(match(arr).by([11]).then(100)).toEqual(FAIL_VALUE)
   })
+
   test("fails if 2nd array has more elements", () => {
     expect(match([10, 20]).by([10, 20, 30]).then(100)).toEqual(FAIL_VALUE)
     expect(match([]).by([10, 20, 30]).then(100)).toEqual(FAIL_VALUE)
   })
+
   test("two empty array match", () => {
     expect(match([]).by([]).then(100)).toEqual(100)
   })
+
   test("fails if 2nd array is empty", () => {
     expect(match([10, 20]).by([]).then(100)).toEqual(FAIL_VALUE)
   })
+
   test("skip element if it is " + PATTERNS.SKIP_ELEMENT, () => {
     expect(match([10, 20, 30]).by([10, SKIP_ELEMENT, 30]).then(100)).toEqual(
       100,
@@ -88,6 +95,7 @@ describe("with arrays", () => {
       100,
     )
   })
+
   test("skip remaining element if it is " + PATTERNS.SKIP_REMAINING, () => {
     expect(match(arr).by([10, 20, PATTERNS.SKIP_REMAINING]).then(100)).toEqual(
       100,
@@ -99,12 +107,15 @@ describe("with arrays", () => {
         .then(100),
     ).toEqual(100)
   })
+
   test("fails if 2nd array is smaller than 1st array but no skip pattern at the end", () => {
     expect(match([10, 20]).by([10]).then(100)).toEqual(FAIL_VALUE)
   })
+
   test("passes if 2nd array is smaller than 1st array but there is skip pattern at the end", () => {
     expect(match([10, 20]).by([10, SKIP_ELEMENT]).then(100)).toEqual(100)
   })
+
   test("return original array if matches", () => {
     expect(
       match([10, 20, 30])
@@ -112,6 +123,7 @@ describe("with arrays", () => {
         .then((arr) => arr[2]),
     ).toEqual(30)
   })
+
   test("return array of matching elements (picked elements) if pick pattern exists in match-by array", () => {
     expect(
       match([10, 20, 30])
@@ -144,6 +156,7 @@ describe("with arrays", () => {
         .then((params) => params),
     ).toEqual([[20, 30], { x: 2, y: 4 }])
   })
+
   test("picks all remianing elements from original array", () => {
     expect(
       match(arr)
@@ -162,6 +175,7 @@ describe("with arrays", () => {
         .then((arr) => arr),
     ).toEqual([20, null, "Hello", x, 20, 30])
   })
+
   test("if picked deeply, return only elements", () => {
     expect(
       match([20, 30, { x: 40, y: 10, z: [2, [4, 5, 6], 5] }])
@@ -181,23 +195,28 @@ describe("with object", () => {
     ).toEqual(obj)
     expect(match(obj).by({ u: null, v: undefined }).then(100)).toEqual(100)
   })
+
   test("wrong elements fails to match", () => {
     expect(match(obj).by({ x: 10, y: 10.23, w: 30 }).then(100)).toEqual(
       FAIL_VALUE,
     )
     expect(match(obj).by([11]).then(100)).toEqual(FAIL_VALUE)
   })
+
   test("two empty objects match", () => {
     expect(match({}).by({}).then(100)).toEqual(100)
   })
+
   test("fails if 2nd object is empty", () => {
     expect(match({ x: 10 }).by({}).then(100)).toEqual(FAIL_VALUE)
   })
+
   test("returns picked object fields", () => {
     expect(
       match({ x: 10, y: 20, z: PICK_ELEMENT }).by({ x: 10 }).then(100),
     ).toEqual(100)
   })
+
   test("returns picked object fields", () => {
     expect(
       match({ w: 5, x: 10, y: 20, z: "~" })
@@ -205,6 +224,7 @@ describe("with object", () => {
         .then((obj) => obj),
     ).toEqual({ x: 10, z: "~" })
   })
+
   test("if picked deeply, return those fields", () => {
     expect(
       match({ x: 20, y: { x: 10, y: 20, z: 30 } })
@@ -224,12 +244,14 @@ describe("'then' can take any primitive, composite values and functions", () => 
     expect(match(10).by(10).then(10.23)).toEqual(10.23)
     expect(match(10).by(10).then("hello")).toEqual("hello")
   })
+
   test("composite values", () => {
     const arr = [10, 20]
     expect(match(10).by(10).then(arr)).toBe(arr)
     const obj = { x: 10, y: 20 }
     expect(match(10).by(10).then(obj)).toBe(obj)
   })
+
   test("functions", () => {
     expect(
       match(10)
@@ -246,6 +268,7 @@ describe("'then' can take any primitive, composite values and functions", () => 
         .then(arraySum),
     ).toEqual(100)
   })
+
   describe("function with boolean match", () => {
     expect(match(log2(8) === 3).then((isTrue) => isTrue)).toEqual(true)
   })
@@ -264,6 +287,7 @@ describe("Composite values", () => {
         .then((val) => val),
     ).toEqual(arr)
   })
+
   test("array - fail", () => {
     const arr = [
       10,
@@ -281,6 +305,7 @@ describe("Composite values", () => {
         .then((val) => val),
     ).toEqual(FAIL_VALUE)
   })
+
   test("object - fails when deep array fails", () => {
     const obj = {
       x: 10,
@@ -293,6 +318,7 @@ describe("Composite values", () => {
         .then((val) => val),
     ).toEqual(FAIL_VALUE)
   })
+
   test("object - passes", () => {
     const obj = {
       x: 10,
