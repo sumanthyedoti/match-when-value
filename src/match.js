@@ -1,5 +1,9 @@
-import { isObjectEmpty, lastElement } from "./utils"
-import { FAIL_VALUE, PATTERNS } from "./config"
+const {
+  isObjectEmpty,
+  lastElement,
+  isMultiValuePattern,
+} = require("./utils.js")
+const { FAIL_VALUE, PATTERNS } = require("./config.js")
 
 function isArraysMatch(arr1, arr2) {
   const pickedElements = []
@@ -63,39 +67,38 @@ function isValuesMatch(val1, val2) {
     return isArraysMatch(val1, val2)
   }
   if (typeof val1 === "object" && val1 !== null) {
-    // console.log(isObjectsMatch(val1, val2))
     return isObjectsMatch(val1, val2)
   }
   return val1 === val2 ? [true, val2] : [false, FAIL_VALUE]
 }
 
 function match(x) {
-  const by = (valToMatch) => {
-    const then = (valToReturn) => {
-      const [isMatch, returnValue] = isValuesMatch(x, valToMatch)
-      if (!isMatch) return returnValue
-      if (typeof valToReturn === "function") {
-        const callback = valToReturn
-        return callback(returnValue)
+  const when = (previousValue) => (pattern, valueIfMatch) => {
+    const [isMatch, returnValue] = isValuesMatch(x, pattern)
+    if (previousValue) {
+      return {
+        when: when(previousValue),
+        value: previousValue,
       }
-      return valToReturn
     }
+    if (!isMatch)
+      return {
+        when: when(returnValue),
+        value: returnValue,
+      }
+    const dd =
+      typeof valueIfMatch === "function"
+        ? valueIfMatch(returnValue)
+        : valueIfMatch
+
     return {
-      then,
+      when: when(dd),
+      value: dd,
     }
-  }
-  function booleanCallback(valueToReturn) {
-    if (!x) return FAIL_VALUE
-    if (typeof valueToReturn === "function") {
-      const callback = valueToReturn
-      return callback(x)
-    }
-    return valueToReturn
   }
 
   return {
-    by,
-    then: booleanCallback,
+    when: when(FAIL_VALUE),
   }
 }
 
