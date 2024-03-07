@@ -1,4 +1,4 @@
-const { isObjectEmpty, lastElement } = require("./utils.js")
+const { isObjectEmpty, lastElement, isFalsy } = require("./utils.js")
 const { FAIL_VALUE, PATTERNS } = require("./config.js")
 
 function isArraysMatch(orignal, target) {
@@ -65,7 +65,7 @@ function isObjectsMatch(orignal, target) {
 }
 
 function isValuesMatch(original, target) {
-  if (target === "_") return [true, target]
+  if (target === "_") return [true, original]
   if (typeof original !== typeof target) return [false, FAIL_VALUE]
   if (Array.isArray(original) && Array.isArray(target)) {
     return isArraysMatch(original, target)
@@ -78,7 +78,7 @@ function isValuesMatch(original, target) {
 
 function match(x) {
   const when = (previousValue) => (pattern, valueIfMatch) => {
-    if (previousValue) {
+    if (!isFalsy(previousValue)) {
       return {
         when: when(previousValue),
         value: previousValue,

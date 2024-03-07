@@ -38,6 +38,30 @@ describe('Any match with "_"', () => {
   })
 })
 
+describe("Basic functions", () => {
+  function factorial(n) {
+    return match(n)
+      .when(0, 1)
+      .when("_", (n) => {
+        return n * factorial(n - 1)
+      }).value
+  }
+  function length(li) {
+    return match(li)
+      .when([], 0)
+      .when("_", (li) => {
+        return 1 + length(li.slice(1))
+      }).value
+  }
+  test("length", () => {
+    expect(length([3, 2, 4, 5])).toEqual(4)
+  })
+  test("factorial", () => {
+    expect(factorial(10)).toEqual(3628800)
+    expect(factorial(0)).toEqual(1)
+  })
+})
+
 describe("Mismatching types", () => {
   test("should fail with mismatching types", () => {
     expect(match(null).when(2, 100).value).toEqual(FAIL_VALUE)
