@@ -27,6 +27,17 @@ describe("variable Match with primitive values", () => {
   })
 })
 
+describe('Any match with "_"', () => {
+  test("Should return value at 'any' pattern (\"_\") when previous patterns did not match)", () => {
+    expect(match(null).when("_", 100).value).toEqual(100)
+    expect(match(null).when("_", () => 100).value).toEqual(100)
+    expect(match(2).when(1, 10).when("_", 100).value).toEqual(100)
+  })
+  test("Should value of matched pattern)", () => {
+    expect(match(2).when(2, 10).when("_", 100).value).toEqual(10)
+  })
+})
+
 describe("Mismatching types", () => {
   test("should fail with mismatching types", () => {
     expect(match(null).when(2, 100).value).toEqual(FAIL_VALUE)

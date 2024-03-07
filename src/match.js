@@ -1,99 +1,107 @@
-const {
-  isObjectEmpty,
-  lastElement,
-  isMultiValuePattern,
-} = require("./utils.js")
+const { isObjectEmpty, lastElement } = require("./utils.js")
 const { FAIL_VALUE, PATTERNS } = require("./config.js")
 
-function isArraysMatch(arr1, arr2) {
+function isArraysMatch(orignal, target) {
   const pickedElements = []
-  if (arr1.length < arr2.length) return [false, FAIL_VALUE]
+  if (orignal.length < target.length) return [false, FAIL_VALUE]
   if (
-    arr2.length < arr1.length &&
-    lastElement(arr2) !== PATTERNS.SKIP_REMAINING &&
-    lastElement(arr2) !== PATTERNS.PICK_REMAINING
+    target.length < orignal.length &&
+    lastElement(target) !== PATTERNS.SKIP_REMAINING &&
+    lastElement(target) !== PATTERNS.PICK_REMAINING
   ) {
     return [false, FAIL_VALUE]
   }
-  if (arr1.length > 0 && arr2.length === 0) return [false, FAIL_VALUE]
-  for (let i = 0; i < arr2.length; i++) {
-    if (arr2[i] === PATTERNS.SKIP_ELEMENT) continue
-    if (arr2[i] === PATTERNS.SKIP_REMAINING) break
-    if (arr2[i] === PATTERNS.PICK_ELEMENT) {
-      pickedElements.push(arr1[i])
+  if (orignal.length > 0 && target.length === 0) return [false, FAIL_VALUE]
+  for (let i = 0; i < target.length; i++) {
+    if (target[i] === PATTERNS.SKIP_ELEMENT) continue
+    if (target[i] === PATTERNS.SKIP_REMAINING) break
+    if (target[i] === PATTERNS.PICK_ELEMENT) {
+      pickedElements.push(orignal[i])
       continue
     }
-    if (arr2[i] === PATTERNS.PICK_REMAINING) {
-      for (let j = i; j < arr1.length; j++) {
-        pickedElements.push(arr1[j])
+    if (target[i] === PATTERNS.PICK_REMAINING) {
+      for (let j = i; j < orignal.length; j++) {
+        pickedElements.push(orignal[j])
       }
       break
     }
-    const [isMatch, returnValue, isPicked] = isValuesMatch(arr1[i], arr2[i])
+    const [isMatch, returnValue, isPicked] = isValuesMatch(
+      orignal[i],
+      target[i],
+    )
     if (isPicked) {
       pickedElements.push(returnValue)
     }
     if (!isMatch) return [false, FAIL_VALUE]
   }
   const isPicked = !isObjectEmpty(pickedElements)
-  return isPicked ? [true, pickedElements, true] : [true, arr1, false]
+  return isPicked ? [true, pickedElements, true] : [true, orignal, false]
 }
 
-function isObjectsMatch(obj1, obj2) {
-  if (!isObjectEmpty(obj1) && isObjectEmpty(obj2)) return [false, FAIL_VALUE]
+function isObjectsMatch(orignal, target) {
+  if (!isObjectEmpty(orignal) && isObjectEmpty(target))
+    return [false, FAIL_VALUE]
   const pickedFields = {}
-  const keys = Object.keys(obj2)
+  const keys = Object.keys(target)
   for (let i = 0; i < keys.length; i++) {
     const key = keys[i]
-    const [isMatch, returnValue, isPicked] = isValuesMatch(obj1[key], obj2[key])
+    const [isMatch, returnValue, isPicked] = isValuesMatch(
+      orignal[key],
+      target[key],
+    )
     if (isPicked) {
       pickedFields[key] = returnValue
     }
-    if (!isMatch && obj2[key] !== PATTERNS.PICK_ELEMENT) {
+    if (!isMatch && target[key] !== PATTERNS.PICK_ELEMENT) {
       return [false, FAIL_VALUE]
     }
-    if (obj2[key] === PATTERNS.PICK_ELEMENT) {
-      pickedFields[key] = obj1[key]
+    if (target[key] === PATTERNS.PICK_ELEMENT) {
+      pickedFields[key] = orignal[key]
       continue
     }
   }
   const isPicked = !isObjectEmpty(pickedFields)
-  return isPicked ? [true, pickedFields, true] : [true, obj1, false]
+  return isPicked ? [true, pickedFields, true] : [true, orignal, false]
 }
 
-function isValuesMatch(val1, val2) {
-  if (typeof val1 !== typeof val2) return [false, FAIL_VALUE]
-  if (Array.isArray(val1) && Array.isArray(val2)) {
-    return isArraysMatch(val1, val2)
+function isValuesMatch(original, target) {
+  if (target === "_") return [true, target]
+  if (typeof original !== typeof target) return [false, FAIL_VALUE]
+  if (Array.isArray(original) && Array.isArray(target)) {
+    return isArraysMatch(original, target)
   }
-  if (typeof val1 === "object" && val1 !== null) {
-    return isObjectsMatch(val1, val2)
+  if (typeof original === "object" && original !== null) {
+    return isObjectsMatch(original, target)
   }
-  return val1 === val2 ? [true, val2] : [false, FAIL_VALUE]
+  return original === target ? [true, target] : [false, FAIL_VALUE]
 }
 
 function match(x) {
   const when = (previousValue) => (pattern, valueIfMatch) => {
-    const [isMatch, returnValue] = isValuesMatch(x, pattern)
     if (previousValue) {
       return {
         when: when(previousValue),
         value: previousValue,
       }
     }
-    if (!isMatch)
+
+    const [isMatch, valueFromMatcher] = isValuesMatch(x, pattern)
+
+    if (!isMatch) {
       return {
-        when: when(returnValue),
-        value: returnValue,
+        when: when(valueFromMatcher),
+        value: valueFromMatcher,
       }
-    const dd =
+    }
+
+    const returnValue =
       typeof valueIfMatch === "function"
-        ? valueIfMatch(returnValue)
+        ? valueIfMatch(valueFromMatcher)
         : valueIfMatch
 
     return {
-      when: when(dd),
-      value: dd,
+      when: when(returnValue),
+      value: returnValue,
     }
   }
 
