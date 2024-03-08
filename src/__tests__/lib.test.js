@@ -1,5 +1,7 @@
-const match = require("../index")
-const { FAIL_VALUE, PATTERNS } = require("../config")
+import match from "../index"
+import { describe, test, expect } from "vitest"
+import { FAIL_VALUE, PATTERNS } from "../config"
+
 const { PICK_ELEMENT } = PATTERNS
 
 describe("variable Match from lib", () => {

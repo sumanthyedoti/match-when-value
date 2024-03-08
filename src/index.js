@@ -1,3 +1,3 @@
-const match = require("./match.js")
+import match from "./match.js"
 
-module.exports = match
+export default match

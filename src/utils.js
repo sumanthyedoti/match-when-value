@@ -1,17 +1,11 @@
-function isObjectEmpty(obj) {
+export function isObjectEmpty(obj) {
   return Object.keys(obj).length === 0
 }
 
-function isFalsy(value) {
+export function isFalsy(value) {
   return value === null || value === undefined
 }
 
-function lastElement(arr) {
+export function lastElement(arr) {
   return arr[arr.length - 1]
-}
-
-module.exports = {
-  isObjectEmpty,
-  lastElement,
-  isFalsy,
 }

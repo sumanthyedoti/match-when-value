@@ -110,4 +110,4 @@ function match(x) {
   }
 }
 
-module.exports = match
+export default match

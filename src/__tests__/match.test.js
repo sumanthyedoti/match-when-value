@@ -1,5 +1,7 @@
-const match = require("../match.js")
-const { FAIL_VALUE, PATTERNS } = require("../config.js")
+import match from "../match.js"
+import { describe, test, expect } from "vitest"
+import { FAIL_VALUE, PATTERNS } from "../config.js"
+
 const { SKIP_ELEMENT, PICK_ELEMENT, SKIP_REMAINING, PICK_REMAINING } = PATTERNS
 
 describe("variable Match with primitive values", () => {
@@ -23,6 +25,7 @@ describe("variable Match with primitive values", () => {
     expect(match(true).when(false, 100).value).toEqual(FAIL_VALUE)
     expect(match(false).when(true, 100).value).toEqual(FAIL_VALUE)
     expect(match(null).when(undefined, 100).value).toEqual(FAIL_VALUE)
+    expect(match(null).when(10, 100).value).toEqual(FAIL_VALUE)
     expect(match(undefined).when(null, 100).value).toEqual(FAIL_VALUE)
   })
 })
