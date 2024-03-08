@@ -1,5 +1,5 @@
-const { isObjectEmpty, lastElement, isFalsy } = require("./utils.js")
-const { FAIL_VALUE, PATTERNS } = require("./config.js")
+import { isObjectEmpty, lastElement, isFalsy } from "./utils.js"
+import { FAIL_VALUE, PATTERNS } from "./config.js"
 
 function isArraysMatch(orignal, target) {
   const pickedElements = []
