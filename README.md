@@ -1,3 +1,18 @@
+# Pattern Matching
+
+- A pattern matching library written in pure JavaScript
+
+## Install
+
+```sh
+npm install pattern-matching
+```
+
+## To-do
+
+- Provide Typescript types
+- Explore Errors scenarios and throw specific Errors
+
 ## Note:
 
 - Fails if array/object to match with is empty
