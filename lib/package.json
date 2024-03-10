@@ -2,13 +2,12 @@
   "name": "pattern-matching",
   "version": "1.0.0",
   "description": "Pattern Matching, in pure JavaScript",
-  "main": "src/index.js",
+  "main": "index.js",
   "type": "module",
   "scripts": {
     "test:dev": "vitest",
     "test": "vitest --no-watch",
-    "build": "babel src -d dist",
-    "rollup": "rollup -c"
+    "build": "rollup -c"
   },
   "keywords": [
     "Pattern Matching",
@@ -21,7 +20,7 @@
     "url": "git+https://github.com/sumanthyedoti/js-pattern-matching.git"
   },
   "author": "Sumanth Yedoti",
-  "license": "ISC",
+  "license": "MIT",
   "bugs": {
     "url": "https://github.com/sumanthyedoti/js-pattern-matching/issues"
   },
@@ -29,8 +28,6 @@
   "devDependencies": {
     "prettier": "2.8.7",
     "rollup": "^4.12.1",
-    "rollup-plugin-commonjs": "^10.1.0",
-    "rollup-plugin-node-resolve": "^5.2.0",
     "vitest": "^1.3.1"
   }
 }

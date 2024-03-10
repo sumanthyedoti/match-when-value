@@ -1,3 +1,5 @@
 packages:
   - "lib"
+  - "usage-test"
   - "examples"
+  - "benchmark"
