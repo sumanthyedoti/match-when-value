@@ -1,5 +1,5 @@
 {
-  "name": "pattern-matching",
+  "name": "match-when-value",
   "version": "0.1.0",
   "description": "Pattern Matching, in pure JavaScript",
   "main": "index.js",
