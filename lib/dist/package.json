@@ -1,14 +1,9 @@
 {
-  "name": "lib",
+  "name": "pattern-matching",
+  "version": "0.1.0",
   "description": "Pattern Matching, in pure JavaScript",
   "main": "index.js",
-  "type": "module",
-  "private": true,
-  "scripts": {
-    "test:dev": "vitest",
-    "test": "vitest --no-watch",
-    "build": "rollup -c"
-  },
+  "module": "index.mjs",
   "keywords": [
     "Pattern Matching",
     "Pattern Matching in JavaScript",
@@ -24,10 +19,5 @@
   "bugs": {
     "url": "https://github.com/sumanthyedoti/js-pattern-matching/issues"
   },
-  "homepage": "https://github.com/sumanthyedoti/js-pattern-matching#readme",
-  "devDependencies": {
-    "prettier": "2.8.7",
-    "rollup": "^4.12.1",
-    "vitest": "^1.3.1"
-  }
+  "homepage": "https://github.com/sumanthyedoti/js-pattern-matching#readme"
 }

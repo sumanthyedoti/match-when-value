@@ -1,11 +1,8 @@
 {
-  "name": "js-pattern-matching",
-  "version": "1.0.0",
-  "description": "",
+  "name": "pattern-matching",
+  "description": "Pattern Matching, in pure JavaScript",
   "private": true,
-  "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
-  },
+  "scripts": {},
   "keywords": [
     "Pattern Matching",
     "Pattern Matching in JavaScript",
