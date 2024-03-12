@@ -93,7 +93,7 @@ console.log(
   match(person)
     .when({ age: 55, name: "John Doe", hasACat: true }, "He is our uncle John")
     .when({ name: "John Doe" }, "He is John but not our uncle")
-    .when("_", "He is not Jhon").value,
+    .when("_", "He is not John").value,
 ) // He is our John uncle
 ```
 
